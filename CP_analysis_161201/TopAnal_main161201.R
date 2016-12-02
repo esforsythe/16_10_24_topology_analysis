@@ -2,7 +2,7 @@
 #It's designed to be used with the the function, TopAnalFunc, which is compiled in the script, TopAnal_function161107.R
 
 #set the working directory
-setwd("~/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis")
+setwd("~/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis/CP_analysis_161201")
 
 #load the needed packages
 library(ape)

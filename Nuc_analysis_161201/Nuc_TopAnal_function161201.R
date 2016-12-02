@@ -1,6 +1,6 @@
 #This is a script for compiling a topology analysis function
 
-setwd("~/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis")
+setwd("~/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis/Nuc_analysis_161201")
 
 #This is the simplest function I can think of.  I need to test if my functions are working on many trees
 PlotTreesFunc<-function(tree){
@@ -60,7 +60,10 @@ RootTreesFunc<-function(tree){
 #Here is a command for clearing all object. Be careful with it.
 #rm(list=ls())
 
-#tree<-read.tree("testtree")
+tree<-read.tree("rooted_testtree")
+
+
+
 
 ####### END TESTING #######
 
@@ -70,7 +73,7 @@ TopAnalFunc<-function(tree){
   
   #store tip names of all relevent species for the droptree
   tips<-tree$tip.label
-  Csat_tip<-grep("Csat", tips)
+  Csat_tips<-grep("Csat", tips)
   Crub_tip<-grep("Crub", tips)
   Cgrand_tip<-grep("Cgra", tips)
   Athal_tip<-grep("Atha", tips)
@@ -109,7 +112,7 @@ TopAnalFunc<-function(tree){
   ###########################################################################################
   
   #test if Csativa seqs are monophyletic and print results
-  Csat_mono<-is.monophyletic(phy=tree, c("Csat_tips"))
+  Csat_mono<-is.monophyletic(phy=tree, c(Csat_tips))
   if(Csat_mono) {Csatmono= "Csativa monophyletic"} else {Csatmono= "Csativa non-monophyletic"}
 
 
@@ -119,7 +122,7 @@ TopAnalFunc<-function(tree){
   
   
   #test if all C group seqs are monophyletic and print results
-  Cgroup_mono<-is.monophyletic(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tip))
+  Cgroup_mono<-is.monophyletic(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tips))
   if(Cgroup_mono) {Cgroupmono = "C group monophyletic"} else {Cgroupmono = "C group non-monophyletic"}
   
   
@@ -135,8 +138,8 @@ TopAnalFunc<-function(tree){
   ###########################################################################################
   
   #Check which clade is monophyletic
-  BC_clade<-is.monophyletic(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tip, Bstri_tip))
-  AC_clade<-is.monophyletic(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tip, Athal_tip, Alyr_tip))
+  BC_clade<-is.monophyletic(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tips, Bstri_tip))
+  AC_clade<-is.monophyletic(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tips, Athal_tip, Alyr_tip))
   AB_clade<-is.monophyletic(phy=tree, c(Athal_tip, Alyr_tip, Bstri_tip))
   
   #Store the correct topology
@@ -144,8 +147,8 @@ TopAnalFunc<-function(tree){
 
   #Store the node representing the MRCA of each potential clade
   #This is the node label at which the crucial BS score resides
-  BC_MRCA<-getMRCA(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tip, Bstri_tip))
-  AC_MRCA<-getMRCA(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tip, Athal_tip, Alyr_tip))
+  BC_MRCA<-getMRCA(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tips, Bstri_tip))
+  AC_MRCA<-getMRCA(phy=tree, c(Crub_tip, Cgrand_tip, Csat_tips, Athal_tip, Alyr_tip))
   AB_MRCA<-getMRCA(phy=tree, c(Athal_tip, Alyr_tip, Bstri_tip))
  
  #plot.phylo(rooted_tree, show.node.label=TRUE)
@@ -153,7 +156,7 @@ TopAnalFunc<-function(tree){
  #retrieve the supporting BS score
  if(BC_clade) {BS_score = (tree$node.label[(BC_MRCA - length(tree$tip.label))])} else if(AC_clade) {BS_score = (tree$node.label[(AC_MRCA - length(tree$tip.label))])} else if(AB_clade) {BS_score = (tree$node.label[(AB_MRCA - length(tree$tip.label))])} else {BS_score = "BS_scoreNA"} 
 
- return(c(Agroup_mono, CrubCgrand_mono, Cgroup_mono, final_topology, BS_score))
+ return(c(Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, BS_score))
 }
 
 
