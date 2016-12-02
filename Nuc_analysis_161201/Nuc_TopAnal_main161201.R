@@ -38,7 +38,12 @@ grid.table(output_df)
 dev.off()
 
 #make a pie chart of topologies
-pie(summary(output_df$Topology))
+
+labels<-names(summary(output_df$Topology))
+
+labels<-paste(labels, summary(output_df$Topology))
+
+pie(summary(output_df$Topology), labels=labels)
 
 
 #barplot (still need to make into stacked bar chart)
@@ -53,14 +58,18 @@ subsettedCrubCgra<-subset(subsettedA, subsettedA$Crub_Cgrand_monophyly=="TRUE")
 subsettedCsat<-subset(subsettedCrubCgra, subsettedCrubCgra$Csat_monophyly=="TRUE")
 subsettedC<-subset(subsettedCsat, subsettedCsat$C_group_monophyly=="TRUE")
 
+#Show the types of non-monophylies
 table(output_df$Agroup_monophyly)
 table(output_df$Crub_Cgrand_monophyly)
 table(output_df$Csat_monophyly)
- 
-
-
-
+table(output_df$C_group_monophyly)
 
 #Make pie chart
-pie(summary(subsettedC$Topology))
+labels2<-names(summary(subsettedC$Topology))
+labels2<-paste(labels2, summary(subsettedC$Topology))
 
+pie(summary(subsettedC$Topology), labels=labels2)
+
+
+
+lapply(trees, PlotTreesFunc)

@@ -1,9 +1,18 @@
 #This is a script for compiling a topology analysis function
 
-setwd("~/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis")
+setwd("~/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis/CP_analysis_161201")
 
 #This is the simplest function I can think of.  I need to test if my functions are working on many trees
 PlotTreesFunc<-function(tree){
+  #tips<-tree$tip.label
+  #Esal_tip<-grep("Esal", tips)
+  #tree<-root(tree, Esal_tip)
+  #tree<-compute.brlen(tree, 100)
+  plot.phylo(tree)
+  nodelabels(tree$node.label)
+}
+
+PlotTreesFunc_branch<-function(tree){
   #tips<-tree$tip.label
   #Esal_tip<-grep("Esal", tips)
   #tree<-root(tree, Esal_tip)
@@ -11,6 +20,7 @@ PlotTreesFunc<-function(tree){
   plot.phylo(tree)
   nodelabels(tree$node.label)
 }
+
 
 #Here I'm gonna try to root all the trees
 RootTreesFunc<-function(tree){
@@ -60,7 +70,7 @@ RootTreesFunc<-function(tree){
 #Here is a command for clearing all object. Be careful with it.
 #rm(list=ls())
 
-#tree<-read.tree("testtree")
+tree<-read.tree("testtree")
 
 ####### END TESTING #######
 
@@ -153,7 +163,12 @@ TopAnalFunc<-function(tree){
  #retrieve the supporting BS score
  if(BC_clade) {BS_score = (tree$node.label[(BC_MRCA - length(tree$tip.label))])} else if(AC_clade) {BS_score = (tree$node.label[(AC_MRCA - length(tree$tip.label))])} else if(AB_clade) {BS_score = (tree$node.label[(AB_MRCA - length(tree$tip.label))])} else {BS_score = "BS_scoreNA"} 
 
+ #Investigating the non-monophyletic topologies
+ Athal_sister<-c(tips(tree, getSisters(tree, Athal_tip, mode="number")))
+ 
+ 
  return(c(Agroup_mono, CrubCgrand_mono, Cgroup_mono, final_topology, BS_score))
+          #Athal_sister))
 }
 
 

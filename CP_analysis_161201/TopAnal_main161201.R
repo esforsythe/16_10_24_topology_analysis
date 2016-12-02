@@ -21,6 +21,11 @@ library(gridExtra)
 
 trees<-read.tree("rooted_catfileCP")
 
+#Plot all the trees
+lapply(trees, PlotTreesFunc)
+
+#Now use standard branch lengths
+lapply(trees, PlotTreesFunc_branch)
 
 #Apply the function to all the trees
 output<-lapply(trees, TopAnalFunc)
@@ -29,6 +34,7 @@ output<-lapply(trees, TopAnalFunc)
 #convert the outpt from a list to a dataframe
 output_df <- data.frame(matrix(unlist(output), nrow=66, byrow=TRUE))
 names(output_df) <- c("Agroup_monophyly", "Crub_Cgrand_monophyly", "C_group_monophyly", "Topology", "Bootstrap_Support")
+                      #"Athal_sister")
 
 #For full analysis
 
@@ -38,11 +44,21 @@ grid.table(output_df)
 dev.off()
 
 #make a pie chart of topologies
-pie(summary(output_df$Topology))
+labels<-names(summary(output_df$Topology))
 
+labels<-paste(labels, summary(output_df$Topology))
 
-#barplot (still need to make into stacked bar chart)
-barplot(summary(output_df$Topology))
+pie(summary(output_df$Topology), labels=labels)
+
+#Show the types of non-monophylies
+table(output_df$Agroup_monophyly)
+table(output_df$Crub_Cgrand_monophyly)
+table(output_df$C_group_monophyly)
+
+#look at trees with non-mono A group
+
+#Agroup_nonmono<-subset(output_df, output_df$Agroup_monophyly=="FALSE")
+#Athal_sisters_df<-Agroup_nonmono$Athal_sister
 
 ###For only the monophyletic trees
 
@@ -52,5 +68,10 @@ subsettedA<-subset(output_df, output_df$Agroup_monophyly=="TRUE")
 subsettedCrubCgra<-subset(subsettedA, subsettedA$Crub_Cgrand_monophyly=="TRUE")
 subsettedC<-subset(subsettedCrubCgra, subsettedCrubCgra$C_group_monophyly=="TRUE")
 
-pie(summary(subsettedC$Topology))
+#piecharts of monophyletic treees only
+labels2<-names(summary(subsettedC$Topology))
+labels2<-paste(labels2, summary(subsettedC$Topology))
+pie(summary(subsettedC$Topology), labels=labels2)
+
+
 
