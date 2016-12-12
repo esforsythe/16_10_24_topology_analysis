@@ -132,7 +132,7 @@ TopAnalFunc<-function(tree){
   ###########################################################################################
   
   #test if Csativa seqs are monophyletic and print results
-  Csat_mono<-is.monophyletic(phy=root_tree, c("Csat_tip"))
+  Csat_mono<-is.monophyletic(phy=root_tree, c(Csat_tip))
   if(Csat_mono) {Csatmono= "Csativa_monophyletic"} else {Csatmono= "Csativa_non_monophyletic"}
   
   
@@ -174,7 +174,7 @@ TopAnalFunc<-function(tree){
   #retrieve the supporting BS score
   if(final_topology == "BC_topology") {BS_score = (root_tree$node.label[(BC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AC_topology") {BS_score = (root_tree$node.label[(AC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AB_topology") {BS_score = (root_tree$node.label[(AB_MRCA - length(root_tree$tip.label))])} else {BS_score = "BS_scoreNA"} 
   
-  #Investigating the non-monophyletic topologies
+  ###Investigating the non-monophyletic topologies
   Athal_sisters<-c(tips(root_tree, getSisters(root_tree, Athal_tip, mode="number")))
   Athal_sis_count<-length(Athal_sisters)
   if(Athal_sis_count==1) 

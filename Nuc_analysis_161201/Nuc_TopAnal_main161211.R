@@ -57,7 +57,36 @@ pie(summary(output_df$Topology), labels=labels)
 #Show the types of non-monophylies
 table(output_df$Agroup_monophyly)
 table(output_df$Crub_Cgrand_monophyly)
+table(output_df$Csat_monophyly)
 table(output_df$C_group_monophyly)
+
+######Venn Diagram###########
+install.packages('VennDiagram')
+library(VennDiagram)
+
+#find the rows that have each group non-monophyletic (aka FALSE)
+A_false<-nrow(subset(output_df, output_df$Agroup_monophyly == FALSE))
+CrubCgra_false<-nrow(subset(output_df, output_df$Crub_Cgrand_monophyly == FALSE))
+Csat_false<-nrow(subset(output_df, output_df$Csat_monophyly == FALSE))
+C_false<-nrow(subset(output_df, output_df$C_group_monophyly == FALSE))
+
+#Find how the falses overlap eachother
+A_C_false<-nrow(subset(output_df, output_df$Agroup_monophyly == FALSE & output_df$C_group_monophyly == FALSE ))
+A_Csat_false<-nrow(subset(output_df, output_df$Agroup_monophyly == FALSE & output_df$Csat_monophyly == FALSE))
+C_Csat_false<-nrow(subset(output_df, output_df$C_group_monophyly == FALSE & output_df$Csat_monophyly == FALSE))
+A_C_Csat_false<-nrow(subset(output_df, output_df$Agroup_monophyly == FALSE & output_df$C_group_monophyly == FALSE & output_df$Csat_monophyly == FALSE))
+
+#Plot the venn diagram
+#Note: grid.newpage was throwing an error so I ran dev.off() and it totally fixed it! Go figure! 
+grid.newpage()
+draw.triple.venn(area1 = A_false, area2 = C_false, area3 = Csat_false,
+                 n12 = A_C_false, n23 = C_Csat_false, n13 = A_Csat_false, n123 = A_C_Csat_false,
+                    category=c("Agroup", "Cgroup", "Csat_paralogs"),
+                        lty = "blank", 
+                            fill = c("skyblue", "pink1", "mediumorchid"))
+                                                                                                                                                                 fill = c("skyblue", "pink1", "mediumorchid"))))
+
+
 
 #look at trees with non-mono A group
 
