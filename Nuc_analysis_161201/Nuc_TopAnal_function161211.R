@@ -1,6 +1,6 @@
 #This is a script for compiling a topology analysis function
 
-setwd("~/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis/CP_analysis_161201")
+setwd("/Users/esforsythe/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis/Nuc_analysis_161201")
 
 #This is the simplest function I can think of.  I need to test if my functions are working on many trees
 PlotTreesFunc<-function(tree){
@@ -72,8 +72,8 @@ RootTreesFunc<-function(tree){
 #rm(list=ls())
 
 tree<-read.tree(
-text="(Esal__NC_028170.1_YP_009175659.1_6:0.00000042022745740336,(Cgra__NC_028517.1_YP_009182875.1_6:0.00000042022745740336,(Atha__NC_000932.1_NP_051043.1_6:0.00000042022745740336,((Bstri_NP_051043:0.02875295565858896479,Csat__psbI:0.00933938042193883412)30:0.00000042022745740336,Alyr__LN877383.1_CUA65388.1_6:0.00000042022745740336)10:0.00000042022745740336)0:0.00000042022745740336)10:0.00000042022745740336,Crub__NC_027693.1_YP_009161905.1_6:0.00000042022745740336);
-")
+  text="(Esal__NC_028170.1_YP_009175659.1_6:0.00000042022745740336,(Cgra__NC_028517.1_YP_009182875.1_6:0.00000042022745740336,(Atha__NC_000932.1_NP_051043.1_6:0.00000042022745740336,((Bstri_NP_051043:0.02875295565858896479,Csat__psbI:0.00933938042193883412)30:0.00000042022745740336,Alyr__LN877383.1_CUA65388.1_6:0.00000042022745740336)10:0.00000042022745740336)0:0.00000042022745740336)10:0.00000042022745740336,Crub__NC_027693.1_YP_009161905.1_6:0.00000042022745740336);
+  ")
 
 ####### END TESTING #######
 
@@ -106,8 +106,8 @@ TopAnalFunc<-function(tree){
   Bstri_tip<-grep("Bstr", tips2)
   Esal_tip<-grep("Esal", tips2)
   
-
-
+  
+  
   ###########################################################################################
   ############                    A group monophyly test                         ############
   ###########################################################################################
@@ -116,26 +116,26 @@ TopAnalFunc<-function(tree){
   #test if A group seqs are monophyletic and print results
   Agroup_mono<-is.monophyletic(phy=root_tree, c(Athal_tip, Alyr_tip))
   if(Agroup_mono) {Agroupmono = "A group monophyletic"} else {Agroupmono = "A group non-monophyletic"}
- 
+  
   
   ###########################################################################################
   ############                    Crub-Cgra group monophyly test                         ############
   ###########################################################################################
-
+  
   
   #test if Crub-Cgrand seqs are monophyletic and print results
   CrubCgrand_mono<-is.monophyletic(phy=root_tree, c(Crub_tip, Cgrand_tip))
   if(CrubCgrand_mono) {Capgroupmono = "Crub-Cgrand monophyletic"} else {Capgroupmono = "Crub-Cgrand non-monophyletic"}
- 
+  
   ###########################################################################################
   ############                     C.sativa paralog monophyly test                         ############
   ###########################################################################################
   
   #test if Csativa seqs are monophyletic and print results
-  Csat_mono<-is.monophyletic(phy=root_tree, c("Csat_tips"))
-  if(Csat_mono) {Csatmono= "Csativa monophyletic"} else {Csatmono= "Csativa non-monophyletic"}
-
-
+  Csat_mono<-is.monophyletic(phy=root_tree, c("Csat_tip"))
+  if(Csat_mono) {Csatmono= "Csativa_monophyletic"} else {Csatmono= "Csativa_non_monophyletic"}
+  
+  
   ###########################################################################################
   ############                    Full C group monophyly test                         ############
   ###########################################################################################
@@ -145,22 +145,22 @@ TopAnalFunc<-function(tree){
   Cgroup_mono<-is.monophyletic(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip))
   if(Cgroup_mono) {Cgroupmono = "C group monophyletic"} else {Cgroupmono = "C group non-monophyletic"}
   
-
+  
   ###########################################################################################
   ############                   Topology analysis of keeper trees               ############
   ###########################################################################################
   
   #Check which clade is monophyletic
   #if (Cgroup_mono) {
-          BC_clade<-is.monophyletic(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip, Bstri_tip))
+  BC_clade<-is.monophyletic(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip, Bstri_tip))
   #if (Cgroup_mono) & (Agroup_mono) {
-          AC_clade<-is.monophyletic(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip, Athal_tip, Alyr_tip))
+  AC_clade<-is.monophyletic(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip, Athal_tip, Alyr_tip))
   #if (Agroup_mono) {
-          AB_clade<-is.monophyletic(phy=root_tree, c(Athal_tip, Alyr_tip, Bstri_tip))
+  AB_clade<-is.monophyletic(phy=root_tree, c(Athal_tip, Alyr_tip, Bstri_tip))
   
   #Store the correct topology
   if(BC_clade & Cgroup_mono) {final_topology = "BC_topology"} else if(AC_clade & Cgroup_mono & Agroup_mono) {final_topology = "AC_topology"} else if (AB_clade & Agroup_mono) {final_topology = "AB_topology"} else {final_topology = "Other_topology"}
-
+  
   
   
   #Store the node representing the MRCA of each potential clade
@@ -168,23 +168,23 @@ TopAnalFunc<-function(tree){
   BC_MRCA<-getMRCA(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip, Bstri_tip))
   AC_MRCA<-getMRCA(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip, Athal_tip, Alyr_tip))
   AB_MRCA<-getMRCA(phy=root_tree, c(Athal_tip, Alyr_tip, Bstri_tip))
- 
- #plot.phylo(root_tree, show.node.label=TRUE)
- 
- #retrieve the supporting BS score
- if(final_topology == "BC_topology") {BS_score = (root_tree$node.label[(BC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AC_topology") {BS_score = (root_tree$node.label[(AC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AB_topology") {BS_score = (root_tree$node.label[(AB_MRCA - length(root_tree$tip.label))])} else {BS_score = "BS_scoreNA"} 
-
- #Investigating the non-monophyletic topologies
- Athal_sisters<-c(tips(root_tree, getSisters(root_tree, Athal_tip, mode="number")))
- Athal_sis_count<-length(Athal_sisters)
- if(Athal_sis_count==1) 
-    {Athal_sis_paste = Athal_sisters} else if(Athal_sis_count==2) 
-        {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2])} else if(Athal_sis_count==3) 
-            {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3])} else if(Athal_sis_count==4) 
-                {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4])} else if(Athal_sis_count==5) 
-                    {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4], Athal_sisters[5])} else {Athal_sis_paste = Many_sisters}
- 
- return(c(Agroup_mono, CrubCgrand_mono, Cgroup_mono, final_topology, BS_score, Athal_sis_paste))
+  
+  #plot.phylo(root_tree, show.node.label=TRUE)
+  
+  #retrieve the supporting BS score
+  if(final_topology == "BC_topology") {BS_score = (root_tree$node.label[(BC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AC_topology") {BS_score = (root_tree$node.label[(AC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AB_topology") {BS_score = (root_tree$node.label[(AB_MRCA - length(root_tree$tip.label))])} else {BS_score = "BS_scoreNA"} 
+  
+  #Investigating the non-monophyletic topologies
+  Athal_sisters<-c(tips(root_tree, getSisters(root_tree, Athal_tip, mode="number")))
+  Athal_sis_count<-length(Athal_sisters)
+  if(Athal_sis_count==1) 
+  {Athal_sis_paste = Athal_sisters} else if(Athal_sis_count==2) 
+  {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2])} else if(Athal_sis_count==3) 
+  {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3])} else if(Athal_sis_count==4) 
+  {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4])} else if(Athal_sis_count==5) 
+  {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4], Athal_sisters[5])} else {Athal_sis_paste = "Many_sisters"}
+  
+  return(c(Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, BS_score, Athal_sis_paste))
 }
 
 

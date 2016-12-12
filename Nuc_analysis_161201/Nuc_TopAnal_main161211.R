@@ -2,7 +2,7 @@
 #It's designed to be used with the the function, TopAnalFunc, which is compiled in the script, TopAnal_function161107.R
 
 #set the working directory
-setwd("~/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis/CP_analysis_161201")
+setwd("/Users/esforsythe/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis/Nuc_analysis_161201")
 
 #load the needed packages
 install.packages("ape")
@@ -22,8 +22,9 @@ library(gridExtra)
 
 #Update, foound a method that does not require rooting beforehand 
 
-trees<-read.tree("CPcatfile161208")
+trees<-read.tree("Nuc_cat161211")
 
+Ntrees<-length(trees)
 
 #Plot all the trees
 lapply(trees, PlotTreesFunc)
@@ -36,8 +37,8 @@ output<-lapply(trees, TopAnalFunc)
 
 
 #convert the outpt from a list to a dataframe
-output_df <- data.frame(matrix(unlist(output), nrow=66, byrow=TRUE))
-names(output_df) <- c("Agroup_monophyly", "Crub_Cgrand_monophyly", "C_group_monophyly", "Topology", "Bootstrap_Support", "Athal_sister")
+output_df <- data.frame(matrix(unlist(output), nrow=Ntrees, byrow=TRUE))
+names(output_df) <- c("Agroup_monophyly", "Crub_Cgrand_monophyly", "Csat_monophyly", "C_group_monophyly", "Topology", "Bootstrap_Support", "Athal_sister")
 
 #For full analysis
 
@@ -77,4 +78,5 @@ labels2<-paste(labels2, summary(subsettedC$Topology))
 pie(summary(subsettedC$Topology), labels=labels2)
 
 
-
+#Histogram of bootstrap scores
+hist(as.numeric(output_df$Bootstrap_Support))
