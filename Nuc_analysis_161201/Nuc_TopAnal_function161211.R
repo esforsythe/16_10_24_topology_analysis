@@ -72,8 +72,8 @@ RootTreesFunc<-function(tree){
 #rm(list=ls())
 
 tree<-read.tree(
-  text="(Esal__NC_028170.1_YP_009175659.1_6:0.00000042022745740336,(Cgra__NC_028517.1_YP_009182875.1_6:0.00000042022745740336,(Atha__NC_000932.1_NP_051043.1_6:0.00000042022745740336,((Bstri_NP_051043:0.02875295565858896479,Csat__psbI:0.00933938042193883412)30:0.00000042022745740336,Alyr__LN877383.1_CUA65388.1_6:0.00000042022745740336)10:0.00000042022745740336)0:0.00000042022745740336)10:0.00000042022745740336,Crub__NC_027693.1_YP_009161905.1_6:0.00000042022745740336);
-  ")
+  text="((Csativa__XP_010457102:0.01518881265333598893,(Csativa__XP_010480051:0.00662865210348756104,Csativa__XP_010474770:0.00671291887992642774)52:0.00324457624170141744)100:0.02191034610995688109,((Crub__Carubv10010070m:0.00000153396898798239,Cgrand__Cagra.1968s0103:0.00395412686650943156)100:0.03470315157896354530,(Bstri__Bostr.5325s0084:0.03216375026092795769,(Alyr__16054647:0.02326242938724031040,Athal__AT1G01630:0.02159315289028859372)100:0.04204974080296691036)39:0.00542206353861695092)50:0.00982388583721963138,Esal__Thhalv10008535m:0.13360687503277937638);
+")
 
 ####### END TESTING #######
 
@@ -106,7 +106,11 @@ TopAnalFunc<-function(tree){
   Bstri_tip<-grep("Bstr", tips2)
   Esal_tip<-grep("Esal", tips2)
   
-  
+  #Collapse poorly supported branches
+  #This is a function that someone wrote.  I found it at:
+  #http://stackoverflow.com/questions/34403957/how-to-collapse-branches-in-a-phylogenetic-tree-by-the-label-in-their-nodes-or-l
+ #not working right now
+ # root_tree<-di2multi4node(root_tree)
   
   ###########################################################################################
   ############                    A group monophyly test                         ############
@@ -175,6 +179,7 @@ TopAnalFunc<-function(tree){
   if(final_topology == "BC_topology") {BS_score = (root_tree$node.label[(BC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AC_topology") {BS_score = (root_tree$node.label[(AC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AB_topology") {BS_score = (root_tree$node.label[(AB_MRCA - length(root_tree$tip.label))])} else {BS_score = "BS_scoreNA"} 
   
   ###Investigating the non-monophyletic topologies
+  #What is sister to A. thaliana?
   Athal_sisters<-c(tips(root_tree, getSisters(root_tree, Athal_tip, mode="number")))
   Athal_sis_count<-length(Athal_sisters)
   if(Athal_sis_count==1) 
@@ -183,8 +188,21 @@ TopAnalFunc<-function(tree){
   {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3])} else if(Athal_sis_count==4) 
   {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4])} else if(Athal_sis_count==5) 
   {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4], Athal_sisters[5])} else {Athal_sis_paste = "Many_sisters"}
+ 
+  #What is sister to the C.grand - C. rubella clade?
+  CrubCgra_MRCA<-getMRCA(phy=root_tree, c(Crub_tip, Cgrand_tip))
+  CrubCgra_sisters<-c(tips(root_tree, getSisters(root_tree, CrubCgra_MRCA, mode="number")))
+  CrubCgra_sis_count<-length(CrubCgra_sisters)
+  if(CrubCgra_sis_count==1) 
+  {CrubCgra_sis_paste = CrubCgra_sisters} else if(CrubCgra_sis_count==2) 
+  {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2])} else if(CrubCgra_sis_count==3) 
+  {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3])} else if(CrubCgra_sis_count==4) 
+  {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4])} else if(CrubCgra_sis_count==5) 
+  {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4], CrubCgra_sisters[5])} else {CrubCgra_sis_paste = "Many_sisters"}
   
-  return(c(Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, BS_score, Athal_sis_paste))
+  
+  
+  return(c(Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, BS_score, Athal_sis_paste, CrubCgra_sis_paste))
 }
 
 

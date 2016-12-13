@@ -184,7 +184,19 @@ TopAnalFunc<-function(tree){
                 {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4])} else if(Athal_sis_count==5) 
                     {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4], Athal_sisters[5])} else {Athal_sis_paste = Many_sisters}
  
- return(c(Agroup_mono, CrubCgrand_mono, Cgroup_mono, final_topology, BS_score, Athal_sis_paste))
+ #What is sister to the C.grand - C. rubella clade?
+ CrubCgra_MRCA<-getMRCA(phy=root_tree, c(Crub_tip, Cgrand_tip))
+ CrubCgra_sisters<-c(tips(root_tree, getSisters(root_tree, CrubCgra_MRCA, mode="number")))
+ CrubCgra_sis_count<-length(CrubCgra_sisters)
+ if(CrubCgra_sis_count==1) 
+    {CrubCgra_sis_paste = CrubCgra_sisters} else if(CrubCgra_sis_count==2) 
+        {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2])} else if(CrubCgra_sis_count==3) 
+            {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3])} else if(CrubCgra_sis_count==4) 
+                {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4])} else if(CrubCgra_sis_count==5) 
+                    {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4], CrubCgra_sisters[5])} else {CrubCgra_sis_paste = "Many_sisters"}
+ 
+ 
+ return(c(Agroup_mono, CrubCgrand_mono, Cgroup_mono, final_topology, BS_score, Athal_sis_paste, CrubCgra_sis_paste))
 }
 
 
