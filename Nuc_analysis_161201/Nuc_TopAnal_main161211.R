@@ -38,21 +38,29 @@ output<-lapply(trees, TopAnalFunc)
 
 #convert the outpt from a list to a dataframe
 output_df <- data.frame(matrix(unlist(output), nrow=Ntrees, byrow=TRUE))
-names(output_df) <- c("Agroup_monophyly", "Crub_Cgrand_monophyly", "Csat_monophyly", "C_group_monophyly", "Topology", "Bootstrap_Support", "Athal_sister", "CrubCgra_sister")
+names(output_df) <- c("Agroup_monophyly", "Crub_Cgrand_monophyly", "Csat_monophyly", "C_group_monophyly", "Topology", "Topology_loose", "Bootstrap_Support", "Athal_sister", "CrubCgra_sister")
 
 #For full analysis
 
 #Build a table with the dataframe
-pdf("CPtable_161209.pdf", height=30, width=20)
+pdf("Nuc_table_161209.pdf", height=30, width=20)
 grid.table(output_df)
 dev.off()
 
-#make a pie chart of topologies
+#make a pie chart of topologies (STRICT)
 labels<-names(summary(output_df$Topology))
 
 labels<-paste(labels, summary(output_df$Topology))
 
-pie(summary(output_df$Topology), labels=labels, main="Nuclear Topologies")
+pie(summary(output_df$Topology), labels=labels, main="Nuclear Topologies (strict)")
+
+#make a pie chart of topologies (LOOSE)
+labels_loose<-names(summary(output_df$Topology_loose))
+
+labels_loose<-paste(labels_loose, summary(output_df$Topology_loose))
+
+pie(summary(output_df$Topology_loose), labels=labels_loose, main="Nuclear Topologies (loose)")
+
 
 #Show the types of non-monophylies
 table(output_df$Agroup_monophyly)
@@ -87,7 +95,7 @@ draw.triple.venn(area1 = A_false, area2 = C_false, area3 = Csat_false,
                                                                                                                                                                  fill = c("skyblue", "pink1", "mediumorchid"))))
 
 #export a CSV file
-write.csv(output_df, file = "Nuc_topAnal161212.csv")
+write.csv(output_df, file = "Nuc_topAnal161215.csv")
 
 
 #look at trees with non-mono A group
@@ -117,13 +125,13 @@ boots_only<-subset(output_df, output_df$Bootstrap_Support != "BS_scoreNA")
 full_hist<-hist(as.numeric(as.vector(boots_only$Bootstrap_Support)), breaks=10)
 
 #Split the topologies
-boots_AC<-subset(boots_only, boots_only$Topology == "AC_topology")
+boots_AC<-subset(boots_only, boots_only$Topology_loose == "AC_topology")
 AC_hist<-hist(as.numeric(as.vector(boots_AC$Bootstrap_Support)), breaks=10)
 
-boots_BC<-subset(boots_only, boots_only$Topology == "BC_topology")
+boots_BC<-subset(boots_only, boots_only$Topology_loose == "BC_topology")
 BC_hist<-hist(as.numeric(as.vector(boots_BC$Bootstrap_Support)), breaks=10)
 
-boots_AB<-subset(boots_only, boots_only$Topology == "AB_topology")
+boots_AB<-subset(boots_only, boots_only$Topology_loose == "AB_topology")
 AB_hist<-hist(as.numeric(as.vector(boots_AB$Bootstrap_Support)), breaks=10)
 
 plot(full_hist, main="distibution of BS scores", xlab= "BS score", border="black", xlim=c(0,100))

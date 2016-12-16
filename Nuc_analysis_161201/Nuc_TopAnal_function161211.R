@@ -155,17 +155,18 @@ TopAnalFunc<-function(tree){
   ###########################################################################################
   
   #Check which clade is monophyletic
-  #if (Cgroup_mono) {
+ 
   BC_clade<-is.monophyletic(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip, Bstri_tip))
-  #if (Cgroup_mono) & (Agroup_mono) {
+
   AC_clade<-is.monophyletic(phy=root_tree, c(Crub_tip, Cgrand_tip, Csat_tip, Athal_tip, Alyr_tip))
-  #if (Agroup_mono) {
+
   AB_clade<-is.monophyletic(phy=root_tree, c(Athal_tip, Alyr_tip, Bstri_tip))
   
-  #Store the correct topology
+  #Store the correct topology (STRICT: requires that A, B, and/or C clade are perfectly monogomous)
   if(BC_clade & Cgroup_mono) {final_topology = "BC_topology"} else if(AC_clade & Cgroup_mono & Agroup_mono) {final_topology = "AC_topology"} else if (AB_clade & Agroup_mono) {final_topology = "AB_topology"} else {final_topology = "Other_topology"}
   
-  
+  #Store the correct topology (LOOSE: Topology analysis with less-strict monophyly requirements)
+  if(BC_clade) {final_topology_loose = "BC_topology"} else if(AC_clade) {final_topology_loose = "AC_topology"} else if (AB_clade) {final_topology_loose = "AB_topology"} else {final_topology_loose = "Other_topology"}
   
   #Store the node representing the MRCA of each potential clade
   #This is the node label at which the crucial BS score resides
@@ -176,7 +177,7 @@ TopAnalFunc<-function(tree){
   #plot.phylo(root_tree, show.node.label=TRUE)
   
   #retrieve the supporting BS score
-  if(final_topology == "BC_topology") {BS_score = (root_tree$node.label[(BC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AC_topology") {BS_score = (root_tree$node.label[(AC_MRCA - length(root_tree$tip.label))])} else if(final_topology == "AB_topology") {BS_score = (root_tree$node.label[(AB_MRCA - length(root_tree$tip.label))])} else {BS_score = "BS_scoreNA"} 
+  if(final_topology_loose == "BC_topology") {BS_score = (root_tree$node.label[(BC_MRCA - length(root_tree$tip.label))])} else if(final_topology_loose == "AC_topology") {BS_score = (root_tree$node.label[(AC_MRCA - length(root_tree$tip.label))])} else if(final_topology_loose == "AB_topology") {BS_score = (root_tree$node.label[(AB_MRCA - length(root_tree$tip.label))])} else {BS_score = "BS_scoreNA"} 
   
   ###Investigating the non-monophyletic topologies
   #What is sister to A. thaliana?
@@ -200,9 +201,11 @@ TopAnalFunc<-function(tree){
   {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4])} else if(CrubCgra_sis_count==5) 
   {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4], CrubCgra_sisters[5])} else {CrubCgra_sis_paste = "Many_sisters"}
   
+ #plot.phylo(root_tree, show.node.label=TRUE)
+ 
+ 
   
-  
-  return(c(Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, BS_score, Athal_sis_paste, CrubCgra_sis_paste))
+  return(c(Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, final_topology_loose, BS_score, Athal_sis_paste, CrubCgra_sis_paste))
 }
 
 
