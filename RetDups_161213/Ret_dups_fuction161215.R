@@ -53,12 +53,21 @@ midpoint <- function(tree){
   phangorn:::reorderPruning(phangorn:::reroot(tree, rn))
 }
 
+
+###Fuction for splitting trees into sub trees
+Split_trees<-function(tree){
+
 #midpoint root the tree
 root_tree<-midpoint(tree)
 
-#Slice tree at the root (or very very close to the root)
+#Slice tree at the root (actually very very close to the root)
 #This outputs a multiphylo of the two sub trees
 sliced_trees<-treeSlice(root_tree, 0.01, trivial=TRUE, prompt=FALSE)
+
+#print trees
+write.tree(sliced_trees, append=TRUE)
+
+}
 
 #TO DO:
 #figure out how to make this into a fuction an lapply it to many trees
