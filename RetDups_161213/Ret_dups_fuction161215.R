@@ -87,15 +87,16 @@ root_tree<-compute.brlen(root_tree, 100)
 #This outputs a multiphylo of the two sub trees
 sliced_trees<-treeSlice(root_tree, 0.01, trivial=TRUE, prompt=FALSE)
 
-first_subtree<-read.tree(text=write.tree(sliced_trees[1]))
-second_subtree<-read.tree(text=write.tree(sliced_trees[2]))
+alltips<-root_tree$tip.label
+tips4root1<-sliced_trees[[1]]$tip.label
+tips4root2<-sliced_trees[[2]]$tip.label
 
-tips4root1<-first_subtree$tip.label
-tips4root2<-second_subtree$tip.label
 
-MRCA4root1<-getMRCA(root_tree, c(tips4root1))
-MRCA4root2<-getMRCA(root_tree, tips4root2)
+#MRCA4root1<-getMRCA(root_tree, c(tips4root1))
+#MRCA4root2<-getMRCA(root_tree, tips4root2)
 
+keeper1<-drop.tip(root_tree, setdiff(alltips, tips4root2))
+keeper2<-drop.tip(root_tree, setdiff(alltips, tips4root1))
 
 subtree1<-extract.clade(root_tree, MRCA4root1)
 subtree2<-extract.clade(root_tree, MRCA4root2)
