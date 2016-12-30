@@ -25,51 +25,18 @@ tree<-read.tree(
   text="(AtAT1G03440:0.04187114736661239067,((((Cs010482019:0.00892043219658301273,Cs010457352:0.01435909806981883544)100:0.03064189833869035429,(Cg0897s0036:0.00948660195299155795,Cr10009374:0.00843410616892512066)100:0.04479526052592704144)100:0.01799473060997335352,Bs26675s0409:0.02800045298680505640)95:0.01359664144612090717,(Es10007833:0.05296089315262035579,(Es10028712:0.07209245987680516776,((Al16052825:0.02856084135001413227,AtAT4G03010:0.03853733051962800887)98:0.01418603820720442006,(Bs2983s0141:0.02700137720334141317,(Cs010430633:0.04686687234906011801,(Cg2552s0026:0.00960537314393852641,Cr10003741:0.00260572075228526117)100:0.03463138745472209984)89:0.01408569171677174700)65:0.00736980102632710677)99:0.04028433347754449556)100:0.14153114841339650698)77:0.01424026568817608751)95:0.01769571435218073030,Al16055687:0.02174917917597851691);
 ")
 
-#Function for midpoint rooting
-#obtained from http://grokbase.com/t/r/r-sig-phylo/109268tgx8/midpoint-rooting
-midpoint <- function(tree){
-  dm = cophenetic(tree)
-  tree = unroot(tree)
-  rn = max(tree$edge)+1
-  maxdm = max(dm)
-  ind = which(dm==maxdm,arr=TRUE)[1,]
-  tmproot = Ancestors(tree, ind[1], "parent")
-  tree = phangorn:::reroot(tree, tmproot)
-  edge = tree$edge
-  el = tree$edge.length
-  children = tree$edge[,2]
-  left = match(ind[1], children)
-  tmp = Ancestors(tree, ind[2], "all")
-  tmp= c(ind[2], tmp[-length(tmp)])
-  right = match(tmp, children)
-  if(el[left]>= (maxdm/2)){
-    edge = rbind(edge, c(rn, ind[1]))
-    edge[left,2] = rn
-    el[left] = el[left] - (maxdm/2)
-    el = c(el, maxdm/2)
-  }
-  else{
-    sel = cumsum(el[right])
-    i = which(sel>(maxdm/2))[1]
-    edge = rbind(edge, c(rn, tmp[i]))
-    edge[right[i],2] = rn
-    eltmp = sel[i] - (maxdm/2)
-    # el = c(el, sel[i] - (maxdm/2))
-    el = c(el, el[right[i]] - eltmp)
-    el[right[i]] = eltmp
-  }
-  tree$edge.length = el
-  tree$edge=edge
-  tree$Nnode = tree$Nnode+1
-  phangorn:::reorderPruning(phangorn:::reroot(tree, rn))
-}
+#new bad tree
+tree<-read.tree(
+  text="(AtAT4G14900:0.04008419396965915565,(((Cs010449973:0.03665365337269542445,(Cr10004542:0.00443075038548971633,Cg2641s0005:0.00758902659326777043)100:0.02998424201653140941)89:0.01034982607738572230,Bs0597s0119:0.02450593630240286563)45:0.00633034450822827100,(Es10024868:0.08270945915136457272,(Es10020440:0.22163269662277917949,((Cg1189s0022:0.00630882942844495850,Cr10015242:0.00330432597010198951)100:0.02385457879406777115,(Cs010511354:0.04016760734812741679,(Bs19424s0409:0.03291457933612540465,(Al16051682:0.01941687644435566296,AtAT3G22440:0.01934887297824286478)97:0.01369438471327411380)33:0.00555438774823359144)61:0.01140108755778668909)99:0.03529516997949427165)100:0.13199523602852064608)92:0.03067898637436113421)100:0.01520343529155917736,Al16040497:0.02992910645218251758);")
+
+#new new bad tree
+tree<-read.tree(
+  text="(((Cg424:0.00083794383615743448,Cr408:0.00184797329647181643)100:0.02406522073183675267,((Cs1006:0.00000132114869771561,Cs1003:0.00000132114869771561)100:0.01176170245164121636,Cs1004:0.01211493163422812380)99:0.00524486435021751570)87:0.00452230956219556220,((((Es414:0.05275161243444976417,((Bs408:0.01878629976476501109,(Cs1002:0.03666316697503224642,(Cg423:0.00345904104551136371,Cr407:0.00187147136699476312)100:0.02569209198044747344)100:0.01807002220204762324)84:0.00608522077439483788,At461:0.03403276578671626806)99:0.01173501891893004821)100:0.05445483946438144790,(Al420:0.03715381575081574267,Cs1005:0.05158681800660384897)100:0.33558204061195134882)100:0.06755086646527501404,Es413:0.04475580169867881403)96:0.02157639733576732430,(Al419:0.00680102797085907311,(At462:0.00000132114869771561,At463:0.00000132114869771561)100:0.01869691827183433269)100:0.01051170892634918641)60:0.00357239585372689551,Bs407:0.01891340623498140652);")
+
 
 PlotTreesFunc<-function(tree){
-  plot.phylo(tree, cex=0.7)
-  nodelabels(tree$node.label, cex=0.5)
+  plot.phylo(tree, cex=0.7, show.node.label=TRUE)
 }
-
-
 
 
 ###Fuction for splitting trees into sub trees
@@ -85,32 +52,24 @@ root_tree<-compute.brlen(root_tree, 100)
 
 #Slice tree at the root (actually very very close to the root)
 #This outputs a multiphylo of the two sub trees
-sliced_trees<-treeSlice(root_tree, 0.01, trivial=TRUE, prompt=FALSE)
+sliced_trees<-treeSlice(root_tree, 0.01, trivial=FALSE, prompt=FALSE)
 
+#This if/else loop is to verify that the split worked and yeilded two sub trees
+#if it didn't yeild two subtrees, that means that one of the accessions came out sister to all others.  These trees should be discarded. 
+if (length(sliced_trees) == 2){
 alltips<-root_tree$tip.label
-tips4root1<-sliced_trees[[1]]$tip.label
-tips4root2<-sliced_trees[[2]]$tip.label
+tips1<-sliced_trees[[1]]$tip.label
+tips2<-sliced_trees[[2]]$tip.label
 
-
-#MRCA4root1<-getMRCA(root_tree, c(tips4root1))
-#MRCA4root2<-getMRCA(root_tree, tips4root2)
-
-keeper1<-drop.tip(root_tree, setdiff(alltips, tips4root2))
-keeper2<-drop.tip(root_tree, setdiff(alltips, tips4root1))
-
-subtree1<-extract.clade(root_tree, MRCA4root1)
-subtree2<-extract.clade(root_tree, MRCA4root2)
-
-
-#subtree2<-drop.tip(root_tree2, MRCA4root)
-
-#root_tree2<-compute.brlen(root_tree2, 100)
-
-#sliced_trees2<-treeSlice(root_tree2, 0.01, trivial=TRUE, prompt=FALSE)
+subtree1<-drop.tip(root_tree, setdiff(alltips, tips2))
+subtree2<-drop.tip(root_tree, setdiff(alltips, tips1))
 
 #print trees
-write.tree(sliced_trees, append=TRUE)
+write.tree(c(subtree1, subtree2), append=TRUE)
+}
+#^^^ end of if loop ^^^
 
+#vvv end of split function vvv
 }
 
 #example tree
@@ -267,9 +226,3 @@ TopAnalFunc<-function(tree){
 
 
 
-#TO DO:
-#figure out how to make this into a fuction an lapply it to many trees
-#Need to figure out have to concatinate all the multiphylos into a large multiphylo
-
-
-#Also, the BS are messed up.  This is a related problem to the one I faced with the single copy gene families.

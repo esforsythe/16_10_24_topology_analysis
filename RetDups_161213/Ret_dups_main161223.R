@@ -15,14 +15,18 @@ library(phytools)
 #library(ggtree)
 
 #read ret dup trees 
-trees<-read.tree("catfile_allretdups")
+trees<-read.tree("catfile_retdups161230")
 
-trees<-read.tree("topten")
+trees<-read.tree("top91")
 
 trees<-read.tree("testfile_retdups")
 
 #split trees into subtrees
 out_trees_string<-sapply(trees, Split_trees)
+
+#Show trees in which the split did not work.  These should be discarded.
+bad_split<-grep("NULL", out_trees_string)
+
 
 #append subtrees into a multiphylo
 out_trees<-read.tree(text=c(out_trees_string))
@@ -31,7 +35,7 @@ out_trees<-read.tree(text=c(out_trees_string))
 Ntrees<-length(out_trees)
 
 #plot all trees
-lapply(sliced_trees, PlotTreesFunc)
+lapply(out_trees, PlotTreesFunc)
 
 #Apply the function to all the trees
 output<-lapply(out_trees, TopAnalFunc)
@@ -44,8 +48,12 @@ names(output_df) <- c("Agroup_monophyly", "Crub_Cgrand_monophyly", "Csat_monophy
 
 #For full analysis
 
+#export a CSV file
+write.csv(output_df, file = "Retdup161230.csv")
+
+
 #Build a table with the dataframe
-pdf("Nuc_table_161209.pdf", height=30, width=20)
+pdf("retdups_table_161230.pdf", height=30, width=20)
 grid.table(output_df)
 dev.off()
 
@@ -95,10 +103,6 @@ draw.triple.venn(area1 = A_false, area2 = C_false, area3 = Csat_false,
                  lty = "blank", 
                  fill = c("skyblue", "pink1", "mediumorchid"))
 fill = c("skyblue", "pink1", "mediumorchid"))))
-
-#export a CSV file
-write.csv(output_df, file = "Retdup161228.csv")
-
 
 #look at trees with non-mono A group
 
