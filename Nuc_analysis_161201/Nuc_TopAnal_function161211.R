@@ -6,7 +6,7 @@ setwd("/Users/esforsythe/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassi
 PlotTreesFunc<-function(tree){
   tree<-compute.brlen(tree, 100)
   tips<-tree$tip.label
-  Esal_tip<-grep("Esal", tips)
+  Esal_tip<-grep("Es", tips)
   root_tree<-root(tree, Esal_tip, resolve.root=TRUE)
   root_tree$node.label=tree$node.label
   plot.phylo(root_tree, cex=0.7)
