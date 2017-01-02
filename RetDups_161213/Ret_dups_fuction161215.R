@@ -217,9 +217,23 @@ TopAnalFunc<-function(tree){
   
   #.phylo(root_tree, show.node.label=TRUE)
   
+  #find the name of the Athal tip(s)
+  Athal_tip2<-grep("At", tips2, value=TRUE)
+  if (length(Athal_tip2) == 0)
+    {Athal_tip_name = "No_Athal_tips"} else if (length(Athal_tip2)==1)
+      {Athal_tip_name = Athal_tip2} else if (length(Athal_tip2)==2)
+        {Athal_tip_name = paste(Athal_tip2[1], Athal_tip2[2])} else if (length(Athal_tip2)==3)
+          {Athal_tip_name = paste(Athal_tip2[1], Athal_tip2[2], Athal_tip2[3])}
   
-  
-  return(c(Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, final_topology_loose, BS_score
+  #find the name of the Crub tip(s)
+  Crub_tip2<-grep("Cr", tips2, value=TRUE)
+  if (length(Crub_tip2) == 0)
+    {Crub_tip_name = "No_Crub_tips"} else if (length(Crub_tip2)==1)
+      {Crub_tip_name = Crub_tip2} else if (length(Crub_tip2)==2)
+        {Crub_tip_name = paste(Crub_tip2[1], Crub_tip2[2])} else if (length(Crub_tip2)==3)
+          {Crub_tip_name = paste(Crub_tip2[1], Crub_tip2[2], Crub_tip2[3])}
+
+    return(c(Athal_tip_name, Crub_tip_name, Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, final_topology_loose, BS_score
            #, Athal_sis_paste, CrubCgra_sis_paste
            ))
 }

@@ -43,7 +43,7 @@ output<-lapply(out_trees, TopAnalFunc)
 
 #convert the outpt from a list to a dataframe
 output_df <- data.frame(matrix(unlist(output), nrow=Ntrees, byrow=TRUE))
-names(output_df) <- c("Agroup_monophyly", "Crub_Cgrand_monophyly", "Csat_monophyly", "C_group_monophyly", "Topology", "Topology_loose", "Bootstrap_Support")
+names(output_df) <- c("Athal_seq", "Crub_seq", "Agroup_monophyly", "Crub_Cgrand_monophyly", "Csat_monophyly", "C_group_monophyly", "Topology", "Topology_loose", "Bootstrap_Support")
                       #, "Athal_sister", "CrubCgra_sister")
 
 #For full analysis
