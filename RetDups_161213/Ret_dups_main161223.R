@@ -49,7 +49,7 @@ names(output_df) <- c("Athal_seq", "Crub_seq", "Agroup_monophyly", "Crub_Cgrand_
 #For full analysis
 
 #export a CSV file
-write.csv(output_df, file = "Retdup161230.csv")
+write.csv(output_df, file = "Retdup170102.csv")
 
 
 #Build a table with the dataframe

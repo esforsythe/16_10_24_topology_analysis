@@ -7,8 +7,7 @@ PlotTreesFunc<-function(tree){
   tree<-compute.brlen(tree, 100)
   tips<-tree$tip.label
   Esal_tip<-grep("Es", tips)
-  root_tree<-root(tree, Esal_tip, resolve.root=TRUE)
-  root_tree$node.label=tree$node.label
+  root_tree<-root(tree, Esal_tip, resolve.root=TRUE, edgelabel=TRUE)
   plot.phylo(root_tree, cex=0.7)
   nodelabels(root_tree$node.label, cex=0.7)
 }
@@ -88,11 +87,11 @@ TopAnalFunc<-function(tree){
   
   tips<-tree$tip.label
   Esal_tip<-grep("Esal", tips)
-  root_tree<-root(tree, Esal_tip, resolve.root=TRUE)
+  root_tree<-root(tree, Esal_tip, resolve.root=TRUE, edgelabel=TRUE)
   
   #After rooting, the BS scores are all messed up. Below, I take the scores from the unrooted tree and put them on the rooted tree.  I need to double-check to make sure this is working correctly! 
   
-  root_tree$node.label=tree$node.label
+  #root_tree$node.label=tree$node.label
   #root_tree$node.label
   
   
@@ -181,31 +180,48 @@ TopAnalFunc<-function(tree){
   
   ###Investigating the non-monophyletic topologies
   #What is sister to A. thaliana?
-  Athal_sisters<-c(tips(root_tree, getSisters(root_tree, Athal_tip, mode="number")))
-  Athal_sis_count<-length(Athal_sisters)
-  if(Athal_sis_count==1) 
-  {Athal_sis_paste = Athal_sisters} else if(Athal_sis_count==2) 
-  {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2])} else if(Athal_sis_count==3) 
-  {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3])} else if(Athal_sis_count==4) 
-  {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4])} else if(Athal_sis_count==5) 
-  {Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4], Athal_sisters[5])} else {Athal_sis_paste = "Many_sisters"}
+  #Athal_sisters<-c(tips(root_tree, getSisters(root_tree, Athal_tip, mode="number")))
+  #Athal_sis_count<-length(Athal_sisters)
+  #if(Athal_sis_count==1) 
+  #{Athal_sis_paste = Athal_sisters} else if(Athal_sis_count==2) 
+  #{Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2])} else if(Athal_sis_count==3) 
+  #{Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3])} else if(Athal_sis_count==4) 
+  #{Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4])} else if(Athal_sis_count==5) 
+  #{Athal_sis_paste = paste(Athal_sisters[1], Athal_sisters[2], Athal_sisters[3], Athal_sisters[4], Athal_sisters[5])} else {Athal_sis_paste = "Many_sisters"}
  
   #What is sister to the C.grand - C. rubella clade?
-  CrubCgra_MRCA<-getMRCA(phy=root_tree, c(Crub_tip, Cgrand_tip))
-  CrubCgra_sisters<-c(tips(root_tree, getSisters(root_tree, CrubCgra_MRCA, mode="number")))
-  CrubCgra_sis_count<-length(CrubCgra_sisters)
-  if(CrubCgra_sis_count==1) 
-  {CrubCgra_sis_paste = CrubCgra_sisters} else if(CrubCgra_sis_count==2) 
-  {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2])} else if(CrubCgra_sis_count==3) 
-  {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3])} else if(CrubCgra_sis_count==4) 
-  {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4])} else if(CrubCgra_sis_count==5) 
-  {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4], CrubCgra_sisters[5])} else {CrubCgra_sis_paste = "Many_sisters"}
+  #CrubCgra_MRCA<-getMRCA(phy=root_tree, c(Crub_tip, Cgrand_tip))
+  #CrubCgra_sisters<-c(tips(root_tree, getSisters(root_tree, CrubCgra_MRCA, mode="number")))
+  #CrubCgra_sis_count<-length(CrubCgra_sisters)
+  #if(CrubCgra_sis_count==1) 
+  #{CrubCgra_sis_paste = CrubCgra_sisters} else if(CrubCgra_sis_count==2) 
+  #{CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2])} else if(CrubCgra_sis_count==3) 
+  #{CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3])} else if(CrubCgra_sis_count==4) 
+  #{CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4])} else if(CrubCgra_sis_count==5) 
+  #{CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4], CrubCgra_sisters[5])} else {CrubCgra_sis_paste = "Many_sisters"}
   
  #plot.phylo(root_tree, show.node.label=TRUE)
  
  
+ #find the name of the Athal tip(s)
+ Athal_tip2<-grep("Athal", tips2, value=TRUE)
+ if (length(Athal_tip2) == 0)
+ {Athal_tip_name = "No_Athal_tips"} else if (length(Athal_tip2)==1)
+ {Athal_tip_name = Athal_tip2} else if (length(Athal_tip2)==2)
+ {Athal_tip_name = paste(Athal_tip2[1], Athal_tip2[2])} else if (length(Athal_tip2)==3)
+ {Athal_tip_name = paste(Athal_tip2[1], Athal_tip2[2], Athal_tip2[3])}
+ 
+ #find the name of the Crub tip(s)
+ Crub_tip2<-grep("Crub", tips2, value=TRUE)
+ if (length(Crub_tip2) == 0)
+ {Crub_tip_name = "No_Crub_tips"} else if (length(Crub_tip2)==1)
+ {Crub_tip_name = Crub_tip2} else if (length(Crub_tip2)==2)
+ {Crub_tip_name = paste(Crub_tip2[1], Crub_tip2[2])} else if (length(Crub_tip2)==3)
+ {Crub_tip_name = paste(Crub_tip2[1], Crub_tip2[2], Crub_tip2[3])}
+ 
   
-  return(c(Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, final_topology_loose, BS_score, Athal_sis_paste, CrubCgra_sis_paste))
+  return(c(Athal_tip_name, Crub_tip_name, Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, final_topology_loose, BS_score))
+           #Athal_sis_paste, CrubCgra_sis_paste))
 }
 
 

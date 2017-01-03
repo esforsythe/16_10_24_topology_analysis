@@ -7,12 +7,15 @@ setwd("/Users/esforsythe/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassi
 #load the needed packages
 install.packages("ape")
 library(ape)
-library(phytools)
 library(geiger)
 library(lattice)
 library(gtable)
 install.packages("gridExtra")
 library(gridExtra)
+install.packages("phangorn")
+library(phangorn)
+install.packages("phytools")
+library(phytools)
 
 ###Important note about trees
 #For some reason the root function is not working in R.  So instead, trees must be rooted before hand
@@ -38,9 +41,12 @@ output<-lapply(trees, TopAnalFunc)
 
 #convert the outpt from a list to a dataframe
 output_df <- data.frame(matrix(unlist(output), nrow=Ntrees, byrow=TRUE))
-names(output_df) <- c("Agroup_monophyly", "Crub_Cgrand_monophyly", "Csat_monophyly", "C_group_monophyly", "Topology", "Topology_loose", "Bootstrap_Support", "Athal_sister", "CrubCgra_sister")
+names(output_df) <- c("Athl_seq", "Crub_seq", "Agroup_monophyly", "Crub_Cgrand_monophyly", "Csat_monophyly", "C_group_monophyly", "Topology", "Topology_loose", "Bootstrap_Support")
 
 #For full analysis
+
+#export a CSV file
+write.csv(output_df, file = "Nuc_topAnal170102.csv")
 
 #Build a table with the dataframe
 pdf("Nuc_table_161209.pdf", height=30, width=20)
@@ -93,9 +99,6 @@ draw.triple.venn(area1 = A_false, area2 = C_false, area3 = Csat_false,
                         lty = "blank", 
                             fill = c("skyblue", "pink1", "mediumorchid"))
                                                                                                                                                                  fill = c("skyblue", "pink1", "mediumorchid"))))
-
-#export a CSV file
-write.csv(output_df, file = "Nuc_topAnal161215.csv")
 
 
 #look at trees with non-mono A group

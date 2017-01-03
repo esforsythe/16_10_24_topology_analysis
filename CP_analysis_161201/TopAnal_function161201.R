@@ -88,11 +88,11 @@ TopAnalFunc<-function(tree){
   
   tips<-tree$tip.label
   Esal_tip<-grep("Esal", tips)
-  root_tree<-root(tree, Esal_tip, resolve.root=TRUE)
+  root_tree<-root(tree, Esal_tip, resolve.root=TRUE, edgelabel=TRUE)
   
   #After rooting, the BS scores are all messed up. Below, I take the scores from the unrooted tree and put them on the rooted tree.  I need to double-check to make sure this is working correctly! 
   
-  root_tree$node.label=tree$node.label
+ # root_tree$node.label=tree$node.label
   #root_tree$node.label
   
   
@@ -197,7 +197,26 @@ TopAnalFunc<-function(tree){
                     {CrubCgra_sis_paste = paste(CrubCgra_sisters[1], CrubCgra_sisters[2], CrubCgra_sisters[3], CrubCgra_sisters[4], CrubCgra_sisters[5])} else {CrubCgra_sis_paste = "Many_sisters"}
  
  
- return(c(Agroup_mono, CrubCgrand_mono, Cgroup_mono, final_topology, final_topology_loose, BS_score, Athal_sis_paste, CrubCgra_sis_paste))
+ 
+ #find the name of the Athal tip(s)
+ Athal_tip2<-grep("At", tips2, value=TRUE)
+ if (length(Athal_tip2) == 0)
+ {Athal_tip_name = "No_Athal_tips"} else if (length(Athal_tip2)==1)
+ {Athal_tip_name = Athal_tip2} else if (length(Athal_tip2)==2)
+ {Athal_tip_name = paste(Athal_tip2[1], Athal_tip2[2])} else if (length(Athal_tip2)==3)
+ {Athal_tip_name = paste(Athal_tip2[1], Athal_tip2[2], Athal_tip2[3])}
+ 
+ #find the name of the Crub tip(s)
+ Crub_tip2<-grep("Cr", tips2, value=TRUE)
+ if (length(Crub_tip2) == 0)
+ {Crub_tip_name = "No_Crub_tips"} else if (length(Crub_tip2)==1)
+ {Crub_tip_name = Crub_tip2} else if (length(Crub_tip2)==2)
+ {Crub_tip_name = paste(Crub_tip2[1], Crub_tip2[2])} else if (length(Crub_tip2)==3)
+ {Crub_tip_name = paste(Crub_tip2[1], Crub_tip2[2], Crub_tip2[3])}
+ 
+ 
+ return(c(Athal_tip_name, Crub_tip_name, Agroup_mono, CrubCgrand_mono, Csat_mono, Cgroup_mono, final_topology, final_topology_loose, BS_score))
+ #Athal_sis_paste, CrubCgra_sis_paste))
 }
 
 
