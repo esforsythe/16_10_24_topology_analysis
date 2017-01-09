@@ -1,4 +1,4 @@
-#This is a script for generating
+#This is a script for generating figs and calculating D-stat with bootstrap and jackkife
 
 #set working directory
 setwd("/Users/esforsythe/Documents/Beilstiein_lab_research/BIOINFORMATICS/Brassicaceae_Phylo/16_10_24_topology_analysis/AllNuclear_170102")
@@ -26,9 +26,16 @@ AB_count<-table["AB_topology"]
 AC_count<-table["AC_topology"]
 BC_count<-table["BC_topology"]
 
+
+
 #Calculate the Dstat
 Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
 Dstat_observed<-unname(Dstat_observed)
+#This is the numerator for calculating the proportion of gene flow
+Num4propGF<-(AC_count - AB_count)
+Num4propGF<-unname(Num4propGF)
+#Num4prop = 229 (17-01-06)
+
 
 #Create function for bootstrapping
 Boot_Dstat <- function(X=data_noOthers$Topology_loose){
@@ -330,7 +337,6 @@ Dstat_observed<-unname(Dstat_observed)
 
 n<-nrow(data_noOthers)
 block_size<-round((n/100)-1)
-index<-i-1
 jackout<-list()
 
 for(i in 1:100) {
@@ -349,7 +355,6 @@ for(i in 1:100) {
   #Calculate the Dstat
   Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
   Dstat_rep<-unname(Dstat_rep)
-  #print(Dstat_rep)
   jackout[[i]]<-Dstat_rep
   
 }
@@ -359,6 +364,380 @@ jackout<-unlist(jackout)
 SD<-sd(jackout)
 z<-(Dstat_observed-0)/SD
 P_value<-2*pnorm(-abs(z))
+
+jackout_full<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+######################################################################
+###Now do the JACKKIFE Dstat calculation for individual chromosomes###
+######################################################################
+
+###CHROM1###
+chrom1_data<-subset(data_noOthers, Scaffold == 1)
+
+table<-table(chrom1_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom1_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom1_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom1_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom1<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM2###
+chrom2_data<-subset(data_noOthers, Scaffold == 2)
+
+table<-table(chrom2_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom2_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom2_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom2_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom2<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM3###
+chrom3_data<-subset(data_noOthers, Scaffold == 3)
+
+table<-table(chrom3_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom3_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom3_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom3_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom3<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM4###
+chrom4_data<-subset(data_noOthers, Scaffold == 4)
+
+table<-table(chrom4_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom4_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom4_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom4_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom4<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM5###
+chrom5_data<-subset(data_noOthers, Scaffold == 5)
+
+table<-table(chrom5_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom5_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom5_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom5_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom5<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM6###
+chrom6_data<-subset(data_noOthers, Scaffold == 6)
+
+table<-table(chrom6_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom6_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom6_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom6_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom6<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM7###
+chrom7_data<-subset(data_noOthers, Scaffold == 7)
+
+table<-table(chrom7_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom7_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom7_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom7_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom7<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM8###
+chrom8_data<-subset(data_noOthers, Scaffold == 8)
+
+table<-table(chrom8_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom8_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom8_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom8_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom8<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###MAKE TABLE OF RESULTS###
+
+#Concat the results from all the chromosomes
+jack_out<-c(jackout_full, jackout_chrom1, jackout_chrom2, jackout_chrom3, jackout_chrom4, jackout_chrom5, jackout_chrom6, jackout_chrom7, jackout_chrom8)
+
+#convert into dataframe
+jack_out_df<- data.frame(matrix(unlist(jack_out), nrow=9, byrow=TRUE))
+
+#append column names and rownames
+names(jack_out_df) <- c("AC_trees", "AB_trees", "Dstat_obs", "SD", "Z_score", "P_value")
+rownames(jack_out_df) <- c("Full_genome", "Chrom1", "Chrom2", "Chrom3", "Chrom4", "Chrom5", "Chrom6", "Chrom7", "Chrom8")
+
+
+
+jack_out_df
 
 ##############################################################################
 ##############################################################################
@@ -371,15 +750,15 @@ P_value<-2*pnorm(-abs(z))
 data_noOthers70BS<-subset(data_noOthers, Bootstrap_Support >= 70)
 
 #make pie chart (BS scores >= 70)
-labels_loose<-names(summary(data_noOthers70BS$Topology_loose))
-labels_loose<-paste(labels_loose, summary(data_noOthers70BS$Topology_loose))
-pie(summary(data_noOthers70BS$Topology_loose), labels=labels_loose, main="Nuclear Topologies (loose)\nBS>=70%")
+labels_loose<-names(summary(data_noOthers70BS70BS$Topology_loose))
+labels_loose<-paste(labels_loose, summary(data_noOthers70BS70BS$Topology_loose))
+pie(summary(data_noOthers70BS70BS$Topology_loose), labels=labels_loose, main="Nuclear Topologies (loose)\nBS>=70%")
 
 
 ###########D-STAT#############
 
 #Find counts of each topology
-table<-table(data_noOthers70BS$Topology_loose)
+table<-table(data_noOthers70BS70BS$Topology_loose)
 AB_count<-table["AB_topology"]
 AC_count<-table["AC_topology"]
 BC_count<-table["BC_topology"]
@@ -389,7 +768,7 @@ Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
 Dstat_observed<-unname(Dstat_observed)
 
 #Create function for bootstrapping
-Boot_Dstat <- function(X=data_noOthers70BS$Topology_loose){
+Boot_Dstat <- function(X=data_noOthers70BS70BS$Topology_loose){
   x.boot<-sample(X, size=length(X), replace=TRUE)
   table<-table(x.boot)
   AB_count<-table["AB_topology"]
@@ -412,7 +791,7 @@ out_full<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 #############################################################
 
 #CHROM 1#
-chrom1_data<-subset(data_noOthers70BS, Scaffold == 1)
+chrom1_data<-subset(data_noOthers70BS70BS, Scaffold == 1)
 
 table<-table(chrom1_data$Topology_loose)
 AB_count<-table["AB_topology"]
@@ -443,7 +822,7 @@ P_value<-2*pnorm(-abs(z))
 out_chrom1<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 
 #CHROM 2#
-chrom2_data<-subset(data_noOthers70BS, Scaffold == 2)
+chrom2_data<-subset(data_noOthers70BS70BS, Scaffold == 2)
 
 table<-table(chrom2_data$Topology_loose)
 AB_count<-table["AB_topology"]
@@ -474,7 +853,7 @@ P_value<-2*pnorm(-abs(z))
 out_chrom2<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 
 #CHROM 3#
-chrom3_data<-subset(data_noOthers70BS, Scaffold == 3)
+chrom3_data<-subset(data_noOthers70BS70BS, Scaffold == 3)
 
 table<-table(chrom3_data$Topology_loose)
 AB_count<-table["AB_topology"]
@@ -505,7 +884,7 @@ P_value<-2*pnorm(-abs(z))
 out_chrom3<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 
 #CHROM 4#
-chrom4_data<-subset(data_noOthers70BS, Scaffold == 4)
+chrom4_data<-subset(data_noOthers70BS70BS, Scaffold == 4)
 
 table<-table(chrom4_data$Topology_loose)
 AB_count<-table["AB_topology"]
@@ -536,7 +915,7 @@ P_value<-2*pnorm(-abs(z))
 out_chrom4<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 
 #CHROM 5#
-chrom5_data<-subset(data_noOthers70BS, Scaffold == 5)
+chrom5_data<-subset(data_noOthers70BS70BS, Scaffold == 5)
 
 table<-table(chrom1_data$Topology_loose)
 AB_count<-table["AB_topology"]
@@ -567,7 +946,7 @@ P_value<-2*pnorm(-abs(z))
 out_chrom5<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 
 #CHROM 6#
-chrom6_data<-subset(data_noOthers70BS, Scaffold == 6)
+chrom6_data<-subset(data_noOthers70BS70BS, Scaffold == 6)
 
 table<-table(chrom6_data$Topology_loose)
 AB_count<-table["AB_topology"]
@@ -598,7 +977,7 @@ P_value<-2*pnorm(-abs(z))
 out_chrom6<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 
 #CHROM 7#
-chrom7_data<-subset(data_noOthers70BS, Scaffold == 7)
+chrom7_data<-subset(data_noOthers70BS70BS, Scaffold == 7)
 
 table<-table(chrom7_data$Topology_loose)
 AB_count<-table["AB_topology"]
@@ -629,7 +1008,7 @@ P_value<-2*pnorm(-abs(z))
 out_chrom7<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 
 #CHROM 8#
-chrom8_data<-subset(data_noOthers70BS, Scaffold == 8)
+chrom8_data<-subset(data_noOthers70BS70BS, Scaffold == 8)
 
 table<-table(chrom8_data$Topology_loose)
 AB_count<-table["AB_topology"]
@@ -663,13 +1042,447 @@ out_chrom8<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
 cat_out_df_70BS<-c(out_full, out_chrom1, out_chrom2, out_chrom3, out_chrom4, out_chrom5, out_chrom6, out_chrom7, out_chrom8)
 
 #convert into dataframe
-cat_out_df_70BS<- data.frame(matrix(unlist(cat_out), nrow=9, byrow=TRUE))
+cat_out_df_70BS<- data.frame(matrix(unlist(cat_out_df_70BS), nrow=9, byrow=TRUE))
 
 #append column names and rownames
 names(cat_out_df_70BS) <- c("AC_trees", "AB_trees", "Dstat_obs", "SD", "Z_score", "P_value")
 rownames(cat_out_df_70BS) <- c("Full_genome", "Chrom1", "Chrom2", "Chrom3", "Chrom4", "Chrom5", "Chrom6", "Chrom7", "Chrom8")
 
 cat_out_df_70BS
+
+
+#####BLOCK JACKKNIFING######
+#Before performing this, you need to make sure 
+#the topology data file is sorted by chromosomal 
+#position
+
+table<-table(data_noOthers70BS$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(data_noOthers70BS)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-data_noOthers70BS[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-data_noOthers70BS[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_full<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+######################################################################
+###Now do the JACKKIFE Dstat calculation for individual chromosomes###
+######################################################################
+
+###CHROM1###
+chrom1_data<-subset(data_noOthers70BS, Scaffold == 1)
+
+table<-table(chrom1_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom1_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom1_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom1_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom1<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM2###
+chrom2_data<-subset(data_noOthers70BS, Scaffold == 2)
+
+table<-table(chrom2_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom2_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom2_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom2_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom2<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM3###
+chrom3_data<-subset(data_noOthers70BS, Scaffold == 3)
+
+table<-table(chrom3_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom3_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom3_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom3_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom3<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM4###
+chrom4_data<-subset(data_noOthers70BS, Scaffold == 4)
+
+table<-table(chrom4_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom4_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom4_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom4_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom4<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM5###
+chrom5_data<-subset(data_noOthers70BS, Scaffold == 5)
+
+table<-table(chrom5_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom5_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom5_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom5_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom5<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM6###
+chrom6_data<-subset(data_noOthers70BS, Scaffold == 6)
+
+table<-table(chrom6_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom6_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom6_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom6_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom6<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM7###
+chrom7_data<-subset(data_noOthers70BS, Scaffold == 7)
+
+table<-table(chrom7_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom7_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom7_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom7_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom7<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###CHROM8###
+chrom8_data<-subset(data_noOthers70BS, Scaffold == 8)
+
+table<-table(chrom8_data$Topology_loose)
+AB_count<-table["AB_topology"]
+AC_count<-table["AC_topology"]
+BC_count<-table["BC_topology"]
+
+#Calculate the Dstat
+Dstat_observed<-(AC_count - AB_count)/(AC_count + AB_count)
+Dstat_observed<-unname(Dstat_observed)
+
+n<-nrow(chrom8_data)
+block_size<-round((n/100)-1)
+jackout<-list()
+
+for(i in 1:100) {
+  #remove the first block
+  if (i == 1){sample_data<-chrom8_data[-c((1):(1+block_size)),]
+  }else {
+    #remove all the other blocks
+    sample_data<-chrom8_data[-c((i*block_size):((i*block_size)+block_size)),]
+  }
+  #Find the topologies for the rep
+  table<-table(sample_data$Topology_loose)
+  AB_count<-table["AB_topology"]
+  AC_count<-table["AC_topology"]
+  BC_count<-table["BC_topology"]
+  
+  #Calculate the Dstat
+  Dstat_rep<-(AC_count - AB_count)/(AC_count + AB_count)
+  Dstat_rep<-unname(Dstat_rep)
+  jackout[[i]]<-Dstat_rep
+  
+}
+#clean up the list
+jackout<-unlist(jackout)
+#Calculate the P-value
+SD<-sd(jackout)
+z<-(Dstat_observed-0)/SD
+P_value<-2*pnorm(-abs(z))
+
+jackout_chrom8<-c(AC_count, AB_count, Dstat_observed, SD, z, P_value)
+
+###MAKE TABLE OF RESULTS###
+
+#Concat the results from all the chromosomes
+jack_out<-c(jackout_full, jackout_chrom1, jackout_chrom2, jackout_chrom3, jackout_chrom4, jackout_chrom5, jackout_chrom6, jackout_chrom7, jackout_chrom8)
+
+#convert into dataframe
+jack_out_df<- data.frame(matrix(unlist(jack_out), nrow=9, byrow=TRUE))
+
+#append column names and rownames
+names(jack_out_df) <- c("AC_trees", "AB_trees", "Dstat_obs", "SD", "Z_score", "P_value")
+rownames(jack_out_df) <- c("Full_genome", "Chrom1", "Chrom2", "Chrom3", "Chrom4", "Chrom5", "Chrom6", "Chrom7", "Chrom8")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ################################################################
 ##########Making tsv files for chrom mapping in coge############
